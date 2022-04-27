@@ -17,13 +17,14 @@ class ShowExtensiveSummonerService {
   async execute(summonerName: string): Promise<any> {
     let resume: IResume | null;
     let matches: any;
+    let league: any;
 
     resume = await Lolinfos.findOne({ name: { $regex: new RegExp('^' + summonerName + '$', 'i') } });
 
     if (!resume) {
       const response = await apiRiotBr1.get(`/lol/summoner/v4/summoners/by-name/${summonerName}`);
       const response2 = await apiRiotBr1.get(`/lol/league/v4/entries/by-summoner/${response.data.id}`);
-
+      league = response2.data;
       resume = await Lolinfos.findOneAndUpdate(
         { puuid: response.data.puuid },
         {
@@ -40,6 +41,9 @@ class ShowExtensiveSummonerService {
         },
         { upsert: true, new: true },
       );
+    } else {
+      const leagueRaw = await apiRiotBr1.get(`/lol/league/v4/entries/by-summoner/${resume?.summonerId}`);
+      league = leagueRaw.data;
     }
 
     matches = await Matches.find({
@@ -78,7 +82,7 @@ class ShowExtensiveSummonerService {
       );
     }
 
-    return { resume, matches };
+    return { resume, league, matches };
   }
 }
 
