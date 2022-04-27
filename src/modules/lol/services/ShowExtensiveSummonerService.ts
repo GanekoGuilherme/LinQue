@@ -50,7 +50,8 @@ class ShowExtensiveSummonerService {
       })
       .limit(10);
 
-    if (!matches) {
+    if (matches.length < 10) {
+      matches = [];
       const response = await apiRiotAmericas.get(`/lol/match/v5/matches/by-puuid/${resume?.puuid}/ids`, {
         params: { start: 0, count: 10 },
       });
