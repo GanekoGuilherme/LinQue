@@ -7,6 +7,15 @@ class ShowResumeSummonerService {
     const response = await apiRiotBr1.get(`/lol/summoner/v4/summoners/by-name/${summonerName}`);
     const response2 = await apiRiotBr1.get(`/lol/league/v4/entries/by-summoner/${response.data.id}`);
 
+    const result = { totalWins: 0, totalLosses: 0, totalMatches: 0 };
+    response2.data.forEach((league: { queueType: string; wins: number; losses: number }) => {
+      if (league.queueType === 'RANKED_SOLO_5x5' || league.queueType === 'RANKED_FLEX_SR') {
+        result.totalWins += league.wins;
+        result.totalLosses += league.losses;
+        result.totalMatches += league.wins + league.losses;
+      }
+    });
+
     await Lolinfos.findOneAndUpdate(
       { puuid: response.data.puuid },
       {
@@ -24,9 +33,7 @@ class ShowResumeSummonerService {
       { upsert: true },
     );
 
-    const result = { summoner: response.data, league: response2.data };
-
-    return result;
+    return { summoner: response.data, result, league: response2.data };
   }
 }
 

@@ -46,6 +46,15 @@ class ShowExtensiveSummonerService {
       league = leagueRaw.data;
     }
 
+    const result = { totalWins: 0, totalLosses: 0, totalMatches: 0 };
+    league.forEach((league: { queueType: string; wins: number; losses: number }) => {
+      if (league.queueType === 'RANKED_SOLO_5x5' || league.queueType === 'RANKED_FLEX_SR') {
+        result.totalWins += league.wins;
+        result.totalLosses += league.losses;
+        result.totalMatches += league.wins + league.losses;
+      }
+    });
+
     matches = await Matches.find({
       'info.participants.summonerName': { $regex: new RegExp('^' + summonerName + '$', 'i') },
     })
@@ -82,7 +91,7 @@ class ShowExtensiveSummonerService {
       );
     }
 
-    return { summoner, league, matches };
+    return { summoner, result, league, matches };
   }
 }
 
