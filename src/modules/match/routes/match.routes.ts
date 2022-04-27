@@ -7,8 +7,6 @@ const matchRoutes = Router();
 
 matchRoutes.get('/list/:summonerName', matchController.list);
 
-// matchRoutes.get('/show/:matchId', matchController.show);
-
 matchRoutes.post('/update/:puuid', matchController.update);
 
 export default matchRoutes;

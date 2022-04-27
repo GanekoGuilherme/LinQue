@@ -1,28 +1,17 @@
 import { Request, Response } from 'express';
-import ListMatchesService from '../services/ListMatchesService';
-import ListMatchesService2 from '../services/ListMatchesService2';
+import ListMatchesFromDBService from '../services/ListMatchesFromDBService';
 import UpdateMatchesService from '../services/UpdateMatchesService';
 
 class MatchController {
   public async list(request: Request, response: Response) {
     const { summonerName } = request.params;
 
-    const listMatchesService = new ListMatchesService2();
+    const listMatchesService = new ListMatchesFromDBService();
 
     const result = await listMatchesService.execute(String(summonerName));
 
     return response.json(result);
   }
-
-  // public async show(request: Request, response: Response) {
-  //   const { puuid } = request.params;
-
-  //   const listMatchService = new ShowMatchService();
-
-  //   const result = await listMatchService.execute(String(puuid));
-
-  //   return response.json(result);
-  // }
 
   public async update(request: Request, response: Response) {
     const { puuid } = request.params;

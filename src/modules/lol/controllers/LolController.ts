@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import ShowResumeSummonerService from '../services/ShowResumeSummonerService';
-import ListMatchService from '../services/ListMatchService';
+import ShowExtensiveSummonerService from '../services/ShowExtensiveSummonerService';
 
 class LolController {
   public async showResume(request: Request, response: Response) {
@@ -13,12 +13,12 @@ class LolController {
     return response.json(result);
   }
 
-  public async listMatch(request: Request, response: Response) {
-    const { puuid } = request.params;
+  public async showExtensive(request: Request, response: Response) {
+    const { summonerName } = request.params;
 
-    const listMatchService = new ListMatchService();
+    const showExtensiveSummonerService = new ShowExtensiveSummonerService();
 
-    const result = await listMatchService.execute(String(puuid));
+    const result = await showExtensiveSummonerService.execute(String(summonerName));
 
     return response.json(result);
   }

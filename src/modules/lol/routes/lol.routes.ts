@@ -7,6 +7,6 @@ const lolRoutes = Router();
 
 lolRoutes.get('/resume/:summonerName', lolController.showResume);
 
-// lolRoutes.get('/matches/:summonerName', lolController.listMatch);
+lolRoutes.get('/extensive/:summonerName', lolController.showExtensive);
 
 export default lolRoutes;

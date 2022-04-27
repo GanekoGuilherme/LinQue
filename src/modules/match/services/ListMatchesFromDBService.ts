@@ -1,9 +1,11 @@
 import Matches from '../schemas/Matches';
 
-class ListMatchesService2 {
+class ListMatchesFromDBService {
   async execute(summonerName: string): Promise<any> {
     try {
-      const matches = await Matches.find({ 'info.participants.summonerName': summonerName })
+      const matches = await Matches.find({
+        'info.participants.summonerName': { $regex: new RegExp('^' + summonerName + '$', 'i') },
+      })
         .sort({
           'info.gameEndTimestamp': -1,
         })
@@ -17,4 +19,4 @@ class ListMatchesService2 {
   }
 }
 
-export default ListMatchesService2;
+export default ListMatchesFromDBService;
