@@ -15,17 +15,17 @@ interface IResume {
 
 class ShowExtensiveSummonerService {
   async execute(summonerName: string): Promise<any> {
-    let resume: IResume | null;
+    let summoner: IResume | null;
     let matches: any;
     let league: any;
 
-    resume = await Lolinfos.findOne({ name: { $regex: new RegExp('^' + summonerName + '$', 'i') } });
+    summoner = await Lolinfos.findOne({ name: { $regex: new RegExp('^' + summonerName + '$', 'i') } });
 
-    if (!resume) {
+    if (!summoner) {
       const response = await apiRiotBr1.get(`/lol/summoner/v4/summoners/by-name/${summonerName}`);
       const response2 = await apiRiotBr1.get(`/lol/league/v4/entries/by-summoner/${response.data.id}`);
       league = response2.data;
-      resume = await Lolinfos.findOneAndUpdate(
+      summoner = await Lolinfos.findOneAndUpdate(
         { puuid: response.data.puuid },
         {
           $setOnInsert: { _id: uuidv4() },
@@ -42,7 +42,7 @@ class ShowExtensiveSummonerService {
         { upsert: true, new: true },
       );
     } else {
-      const leagueRaw = await apiRiotBr1.get(`/lol/league/v4/entries/by-summoner/${resume?.summonerId}`);
+      const leagueRaw = await apiRiotBr1.get(`/lol/league/v4/entries/by-summoner/${summoner?.summonerId}`);
       league = leagueRaw.data;
     }
 
@@ -56,7 +56,7 @@ class ShowExtensiveSummonerService {
 
     if (matches.length < 10) {
       matches = [];
-      const response = await apiRiotAmericas.get(`/lol/match/v5/matches/by-puuid/${resume?.puuid}/ids`, {
+      const response = await apiRiotAmericas.get(`/lol/match/v5/matches/by-puuid/${summoner?.puuid}/ids`, {
         params: { start: 0, count: 10 },
       });
 
@@ -82,7 +82,7 @@ class ShowExtensiveSummonerService {
       );
     }
 
-    return { resume, league, matches };
+    return { summoner, league, matches };
   }
 }
 
