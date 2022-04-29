@@ -35,6 +35,12 @@ const users = new Schema(
       required: true,
       default: false,
     },
+    userTokenActive: {
+      type: String,
+    },
+    userTokenActiveExpires: {
+      type: Date,
+    },
   },
   {
     timestamps: true,

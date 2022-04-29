@@ -9,4 +9,8 @@ userRoutes.post('/create', userController.store);
 
 userRoutes.get('/validate-email/:email', userController.checkEmail);
 
+userRoutes.post('/active-user', userController.activeUser);
+
+userRoutes.post('/request-active-user/:userId', userController.requestActiveUser);
+
 export default userRoutes;
