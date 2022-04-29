@@ -1,6 +1,7 @@
 import AppError from '@shared/errors/AppError';
 import Users from '../schemas/Users';
 import { v4 as uuidv4 } from 'uuid';
+import { GenerateTokenProvider } from '../providers/GenerateTokenProviders';
 
 interface IRequestDTO {
   name?: string;
@@ -8,8 +9,23 @@ interface IRequestDTO {
   password?: string;
 }
 
+interface IUserInterface {
+  userId: string;
+  name: string;
+  email: string;
+}
+
+interface IResponseDTO {
+  token: string;
+  user: IUserInterface;
+}
+
 class CreateUserService {
-  async execute({ name, email, password }: IRequestDTO): Promise<void> {
+  constructor(private generateToken: GenerateTokenProvider) {
+    this.generateToken = generateToken;
+  }
+
+  async execute({ name, email, password }: IRequestDTO): Promise<IResponseDTO> {
     if (!name) throw new AppError('Nome não enviado.');
     if (!email) throw new AppError('E-mail não enviado.');
     if (!password) throw new AppError('Senha não enviada.');
@@ -23,7 +39,11 @@ class CreateUserService {
       throw new AppError('Senha Inválida!', 400);
     }
 
-    await Users.create({ _id: uuidv4(), name, email, password, verify: false, passwordToken: uuidv4() });
+    const user = await Users.create({ _id: uuidv4(), name, email, password, verify: false, passwordToken: uuidv4() });
+
+    const token = await this.generateToken.execute(user._id);
+
+    return { token, user: { userId: user._id, name: user.name, email: user.email } };
   }
 }
 
