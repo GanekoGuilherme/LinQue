@@ -10,7 +10,7 @@ class MailjetEmailProvider {
   public async sendEmailToResetPassword({ email, name, token }: IRequestDTO): Promise<void> {
     const conection = mailjet.connect(String(process.env.MAILJET_API_KEY), String(process.env.MAILJET_API_SECRET));
 
-    const request = conection.post('send', { version: 'v3.1' }).request({
+    await conection.post('send', { version: 'v3.1' }).request({
       Messages: [
         {
           From: {
@@ -29,14 +29,6 @@ class MailjetEmailProvider {
         },
       ],
     });
-
-    request
-      .then(result => {
-        console.log(result.body);
-      })
-      .catch(err => {
-        console.log(err.statusCode);
-      });
   }
 
   public async sendEmailToActiveUser({ email, name, token }: IRequestDTO): Promise<void> {

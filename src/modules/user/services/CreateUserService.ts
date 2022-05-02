@@ -36,7 +36,7 @@ class CreateUserService {
     const pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*?[0-9])[@!#$%^&*+\-.,;_:'~()/\\a-zA-Z\d]{8,16}$/;
 
     if (!pattern.test(password)) {
-      throw new AppError('Senha Inválida!', 400);
+      throw new AppError('Senha Inválida.', 400);
     }
 
     const user = await Users.create({ _id: uuidv4(), name, email, password, verify: false, passwordToken: uuidv4() });
