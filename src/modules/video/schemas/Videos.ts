@@ -20,6 +20,10 @@ const videos = new Schema(
     url: {
       type: String,
     },
+    dataId: {
+      type: String,
+      required: true,
+    },
   },
   {
     timestamps: true,
