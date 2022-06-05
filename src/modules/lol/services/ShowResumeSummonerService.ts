@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 class ShowResumeSummonerService {
   async execute(summonerName: string): Promise<any> {
-    const response = await apiRiotBr1.get(`/lol/summoner/v4/summoners/by-name/${summonerName}`);
+    const response = await apiRiotBr1.get(`/lol/summoner/v4/summoners/by-name/${encodeURI(summonerName)}`);
     const response2 = await apiRiotBr1.get(`/lol/league/v4/entries/by-summoner/${response.data.id}`);
 
     const result = { totalWins: 0, totalLosses: 0, totalMatches: 0 };

@@ -22,7 +22,7 @@ class ShowExtensiveSummonerService {
     summoner = await Lolinfos.findOne({ name: { $regex: new RegExp('^' + summonerName + '$', 'i') } });
 
     if (!summoner) {
-      const response = await apiRiotBr1.get(`/lol/summoner/v4/summoners/by-name/${summonerName}`);
+      const response = await apiRiotBr1.get(`/lol/summoner/v4/summoners/by-name/${encodeURI(summonerName)}`);
       const response2 = await apiRiotBr1.get(`/lol/league/v4/entries/by-summoner/${response.data.id}`);
       league = response2.data;
       summoner = await Lolinfos.findOneAndUpdate(
