@@ -20,39 +20,32 @@ class ShowExtensiveSummonerService {
     let matches: any;
     let league: any;
 
-    summoner = await Lolinfos.findOne({ name: { $regex: new RegExp('^' + summonerName + '$', 'i') } });
+    const response = await apiRiotBr1
+      .get(`/lol/summoner/v4/summoners/by-name/${encodeURI(summonerName)}`)
+      .catch((error: any) => {
+        if (error?.response?.data?.status?.message === 'Data not found - summoner not found') {
+          throw new AppError('Invocador não encontrado.', 404);
+        }
+        throw new AppError('Falha na comunicação com API Riot.', 500);
+      });
+    const response2 = await apiRiotBr1.get(`/lol/league/v4/entries/by-summoner/${response.data.id}`);
+    league = response2.data;
+    summoner = await Lolinfos.findOneAndUpdate(
+      { puuid: response.data.puuid },
+      {
+        $setOnInsert: { _id: uuidv4() },
 
-    if (!summoner) {
-      const response = await apiRiotBr1
-        .get(`/lol/summoner/v4/summoners/by-name/${encodeURI(summonerName)}`)
-        .catch((error: any) => {
-          if (error?.response?.data?.status?.message === 'Data not found - summoner not found') {
-            throw new AppError('Invocador não encontrado.', 404);
-          }
-          throw new AppError('Falha na comunicação com API Riot.', 500);
-        });
-      const response2 = await apiRiotBr1.get(`/lol/league/v4/entries/by-summoner/${response.data.id}`);
-      league = response2.data;
-      summoner = await Lolinfos.findOneAndUpdate(
-        { puuid: response.data.puuid },
-        {
-          $setOnInsert: { _id: uuidv4() },
-
-          $set: {
-            puuid: response.data.puuid,
-            summonerId: response.data.id,
-            name: response.data.name,
-            profileIconId: response.data.profileIconId,
-            revisionDate: response.data.revisionDate,
-            summonerLevel: response.data.summonerLevel,
-          },
+        $set: {
+          puuid: response.data.puuid,
+          summonerId: response.data.id,
+          name: response.data.name,
+          profileIconId: response.data.profileIconId,
+          revisionDate: response.data.revisionDate,
+          summonerLevel: response.data.summonerLevel,
         },
-        { upsert: true, new: true },
-      );
-    } else {
-      const leagueRaw = await apiRiotBr1.get(`/lol/league/v4/entries/by-summoner/${summoner?.summonerId}`);
-      league = leagueRaw.data;
-    }
+      },
+      { upsert: true, new: true },
+    );
 
     const result = { totalWins: 0, totalLosses: 0, totalMatches: 0 };
     league.forEach((league: { queueType: string; wins: number; losses: number }) => {
