@@ -13,6 +13,8 @@ var _uuid = require("uuid");
 
 var _Matches = _interopRequireDefault(require("../../match/schemas/Matches"));
 
+var _AppError = _interopRequireDefault(require("../../../shared/errors/AppError"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 class ShowExtensiveSummonerService {
@@ -27,7 +29,13 @@ class ShowExtensiveSummonerService {
     });
 
     if (!summoner) {
-      const response = await _apis.apiRiotBr1.get(`/lol/summoner/v4/summoners/by-name/${encodeURI(summonerName)}`);
+      const response = await _apis.apiRiotBr1.get(`/lol/summoner/v4/summoners/by-name/${encodeURI(summonerName)}`).catch(error => {
+        if (error?.response?.data?.status?.message === 'Data not found - summoner not found') {
+          throw new _AppError.default('Invocador não encontrado.', 404);
+        }
+
+        throw new _AppError.default('Falha na comunicação com API Riot.', 500);
+      });
       const response2 = await _apis.apiRiotBr1.get(`/lol/league/v4/entries/by-summoner/${response.data.id}`);
       league = response2.data;
       summoner = await _Lolinfos.default.findOneAndUpdate({

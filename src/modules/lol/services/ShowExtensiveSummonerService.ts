@@ -2,6 +2,7 @@ import { apiRiotAmericas, apiRiotBr1 } from '@shared/infra/apis';
 import Lolinfos from '../schemas/Lolinfos';
 import { v4 as uuidv4 } from 'uuid';
 import Matches from '@modules/match/schemas/Matches';
+import AppError from '@shared/errors/AppError';
 
 interface IResume {
   _id: string;
@@ -22,7 +23,14 @@ class ShowExtensiveSummonerService {
     summoner = await Lolinfos.findOne({ name: { $regex: new RegExp('^' + summonerName + '$', 'i') } });
 
     if (!summoner) {
-      const response = await apiRiotBr1.get(`/lol/summoner/v4/summoners/by-name/${encodeURI(summonerName)}`);
+      const response = await apiRiotBr1
+        .get(`/lol/summoner/v4/summoners/by-name/${encodeURI(summonerName)}`)
+        .catch((error: any) => {
+          if (error?.response?.data?.status?.message === 'Data not found - summoner not found') {
+            throw new AppError('Invocador não encontrado.', 404);
+          }
+          throw new AppError('Falha na comunicação com API Riot.', 500);
+        });
       const response2 = await apiRiotBr1.get(`/lol/league/v4/entries/by-summoner/${response.data.id}`);
       league = response2.data;
       summoner = await Lolinfos.findOneAndUpdate(
