@@ -7,7 +7,7 @@ const userRoutes = Router();
 
 userRoutes.post('/create', userController.store);
 
-userRoutes.get('/validate-email/:email', userController.checkEmail);
+userRoutes.post('/validate-email', userController.checkEmail);
 
 userRoutes.post('/active-user', userController.activeUser);
 

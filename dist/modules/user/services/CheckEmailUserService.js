@@ -13,6 +13,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 class CheckEmailUserService {
   async execute(email) {
+    if (!email) {
+      throw new _AppError.default('E-mail não enviado.', 400);
+    }
+
     const checkEmail = await _Users.default.findOne({
       email
     });

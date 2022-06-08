@@ -20,11 +20,11 @@ class UserController {
   }
 
   public async checkEmail(request: Request, response: Response) {
-    const { email } = request.params;
+    const { email } = request.body;
 
     const checkEmailUserService = new CheckEmailUserService();
 
-    const result = await checkEmailUserService.execute(String(email));
+    const result = await checkEmailUserService.execute(email);
 
     return response.json(result);
   }

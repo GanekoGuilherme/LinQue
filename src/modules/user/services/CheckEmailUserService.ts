@@ -6,9 +6,14 @@ interface IResponseDTO {
 }
 
 class CheckEmailUserService {
-  async execute(email: string): Promise<IResponseDTO> {
+  async execute(email: string | undefined): Promise<IResponseDTO> {
+    if (!email) {
+      throw new AppError('E-mail não enviado.', 400);
+    }
+
     const checkEmail = await Users.findOne({ email });
     if (checkEmail) throw new AppError('E-mail indisponível.', 400);
+
     return { message: 'E-mail disponível.' };
   }
 }
