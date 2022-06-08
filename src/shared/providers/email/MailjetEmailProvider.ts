@@ -26,7 +26,7 @@ class MailjetEmailProvider {
               },
             ],
             Subject: 'Recuperação de senha',
-            HTMLPart: `<h3>Olá ${name}, <br><br>    Clique <a href='https://agroradar.herokuapp.com/cadastro-senha/${token}'>aqui</a> para iniciar a recuperação de sua senha!</h3><h5> Caso o link acima não funcionar, copie a URL (https://agroradar.herokuapp.com/cadastro-senha/${token}) e cole no navegador.</h5>`,
+            HTMLPart: `<h3>Olá ${name}, <br><br>    Clique <a href='https://linque.vercel.app/password/${token}'>aqui</a> para iniciar a recuperação de sua senha!</h3><h5> Caso o link acima não funcionar, copie a URL (https://linque.vercel.app/password/${token}) e cole no navegador.</h5>`,
             CustomID: 'AppGettingStartedTest',
           },
         ],
