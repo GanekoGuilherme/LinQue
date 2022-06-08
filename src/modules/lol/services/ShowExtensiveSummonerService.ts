@@ -3,6 +3,7 @@ import Lolinfos from '../schemas/Lolinfos';
 import { v4 as uuidv4 } from 'uuid';
 import Matches from '@modules/match/schemas/Matches';
 import AppError from '@shared/errors/AppError';
+import Videos from '@modules/video/schemas/Videos';
 
 interface IResume {
   _id: string;
@@ -16,7 +17,7 @@ interface IResume {
 
 class ShowExtensiveSummonerService {
   async execute(summonerName: string): Promise<any> {
-    let summoner: IResume | null;
+    let summoner: IResume;
     let matches: any;
     let league: any;
 
@@ -30,6 +31,7 @@ class ShowExtensiveSummonerService {
       });
     const response2 = await apiRiotBr1.get(`/lol/league/v4/entries/by-summoner/${response.data.id}`);
     league = response2.data;
+
     summoner = await Lolinfos.findOneAndUpdate(
       { puuid: response.data.puuid },
       {
@@ -92,7 +94,12 @@ class ShowExtensiveSummonerService {
       );
     }
 
-    return { summoner, result, league, matches };
+    const videos = await Videos.find({ dataId: summoner._id })
+      .select('_id name url createdAt')
+      .sort({ createdAt: -1 })
+      .limit(10);
+
+    return { summoner, result, league, matches, videos };
   }
 }
 

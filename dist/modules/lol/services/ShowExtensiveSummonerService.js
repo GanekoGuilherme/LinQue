@@ -15,6 +15,8 @@ var _Matches = _interopRequireDefault(require("../../match/schemas/Matches"));
 
 var _AppError = _interopRequireDefault(require("../../../shared/errors/AppError"));
 
+var _Videos = _interopRequireDefault(require("../../video/schemas/Videos"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 class ShowExtensiveSummonerService {
@@ -99,11 +101,17 @@ class ShowExtensiveSummonerService {
       }));
     }
 
+    const videos = await _Videos.default.find({
+      dataId: summoner._id
+    }).select('_id name url createdAt').sort({
+      createdAt: -1
+    }).limit(10);
     return {
       summoner,
       result,
       league,
-      matches
+      matches,
+      videos
     };
   }
 
