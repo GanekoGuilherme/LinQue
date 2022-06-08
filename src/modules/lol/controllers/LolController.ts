@@ -3,12 +3,12 @@ import ShowResumeSummonerService from '../services/ShowResumeSummonerService';
 import ShowExtensiveSummonerService from '../services/ShowExtensiveSummonerService';
 
 class LolController {
-  public async showResume(request: Request, response: Response) {
-    const { summonerName } = request.params;
+  public async showStatusMatches(request: Request, response: Response) {
+    const { dataId } = request.params;
 
     const showResumeSummonerService = new ShowResumeSummonerService();
 
-    const result = await showResumeSummonerService.execute(String(summonerName));
+    const result = await showResumeSummonerService.execute(String(dataId));
 
     return response.json(result);
   }

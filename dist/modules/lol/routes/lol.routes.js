@@ -13,7 +13,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 const lolController = new _LolController.default();
 const lolRoutes = (0, _express.Router)();
-lolRoutes.get('/resume/:summonerName', lolController.showResume);
+lolRoutes.get('/resume/:dataId', lolController.showStatusMatches);
 lolRoutes.get('/extensive/:summonerName', lolController.showExtensive);
 var _default = lolRoutes;
 exports.default = _default;

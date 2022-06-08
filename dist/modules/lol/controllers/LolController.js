@@ -12,12 +12,12 @@ var _ShowExtensiveSummonerService = _interopRequireDefault(require("../services/
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 class LolController {
-  async showResume(request, response) {
+  async showStatusMatches(request, response) {
     const {
-      summonerName
+      dataId
     } = request.params;
     const showResumeSummonerService = new _ShowResumeSummonerService.default();
-    const result = await showResumeSummonerService.execute(String(summonerName));
+    const result = await showResumeSummonerService.execute(String(dataId));
     return response.json(result);
   }
 

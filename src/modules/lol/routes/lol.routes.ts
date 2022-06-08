@@ -5,7 +5,7 @@ const lolController = new LolController();
 
 const lolRoutes = Router();
 
-lolRoutes.get('/resume/:summonerName', lolController.showResume);
+lolRoutes.get('/resume/:dataId', lolController.showStatusMatches);
 
 lolRoutes.get('/extensive/:summonerName', lolController.showExtensive);
 
