@@ -11,6 +11,8 @@ var _Users = _interopRequireDefault(require("../schemas/Users"));
 
 var _bcryptjs = require("bcryptjs");
 
+var _Lolinfos = _interopRequireDefault(require("../../lol/schemas/Lolinfos"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 class AuthUserService {
@@ -32,12 +34,16 @@ class AuthUserService {
     const passwordMatch = await (0, _bcryptjs.compare)(password, checkUser.password);
     if (!passwordMatch) throw new _AppError.default('Usuário ou senha incorretos.', 404);
     const token = await this.generateToken.execute(checkUser._id);
+    const data = await _Lolinfos.default.findOne({
+      userId: checkUser._id
+    }).select('name');
     return {
       token,
       user: {
         userId: checkUser._id,
         name: checkUser.name,
-        email: checkUser.email
+        email: checkUser.email,
+        summonerName: data?.name
       }
     };
   }

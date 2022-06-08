@@ -2,6 +2,7 @@ import AppError from '@shared/errors/AppError';
 import Users from '../schemas/Users';
 import { compare } from 'bcryptjs';
 import { GenerateTokenProvider } from '../providers/GenerateTokenProviders';
+import Lolinfos from '@modules/lol/schemas/Lolinfos';
 
 interface IRequestDTO {
   email?: string;
@@ -12,6 +13,7 @@ interface IUserInterface {
   userId: string;
   name: string;
   email: string;
+  summonerName?: string;
 }
 
 interface IResponseDTO {
@@ -37,7 +39,12 @@ class AuthUserService {
 
     const token = await this.generateToken.execute(checkUser._id);
 
-    return { token, user: { userId: checkUser._id, name: checkUser.name, email: checkUser.email } };
+    const data = await Lolinfos.findOne({ userId: checkUser._id }).select('name');
+
+    return {
+      token,
+      user: { userId: checkUser._id, name: checkUser.name, email: checkUser.email, summonerName: data?.name },
+    };
   }
 }
 
