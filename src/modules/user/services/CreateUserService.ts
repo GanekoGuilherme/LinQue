@@ -33,9 +33,12 @@ class CreateUserService {
     const checkEmail = await Users.findOne({ email });
     if (checkEmail) throw new AppError('E-mail indisponível.', 400);
 
-    const pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*?[0-9])[@!#$%^&*+\-.,;_:'~()/\\a-zA-Z\d]{8,16}$/;
+    const minLength = password.length >= 8;
+    const containsLetter = /[a-zA-Z]/.test(password);
+    const containsNumber = /[0-9]/.test(password);
+    const containsSpecial = /\W|_/.test(password);
 
-    if (!pattern.test(password)) {
+    if (!(minLength && containsLetter && containsNumber && containsSpecial)) {
       throw new AppError('Senha Inválida.', 400);
     }
 

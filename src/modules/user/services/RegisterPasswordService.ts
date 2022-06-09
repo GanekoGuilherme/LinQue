@@ -23,10 +23,13 @@ class RegisterPasswordService {
     const user = await Users.findOne({ passwordToken });
     if (!user) throw new AppError('Token inválido.', 400);
 
-    const pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*?[0-9])[@!#$%^&*+\-.,;_:'~()/\\a-zA-Z\d]{8,16}$/;
+    const minLength = password.length >= 8;
+    const containsLetter = /[a-zA-Z]/.test(password);
+    const containsNumber = /[0-9]/.test(password);
+    const containsSpecial = /\W|_/.test(password);
 
-    if (!pattern.test(password)) {
-      throw new AppError('Senha inválida.', 400);
+    if (!(minLength && containsLetter && containsNumber && containsSpecial)) {
+      throw new AppError('Senha Inválida.', 400);
     }
 
     const dateNow = new Date();
