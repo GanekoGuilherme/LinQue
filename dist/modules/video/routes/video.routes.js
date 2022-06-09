@@ -22,7 +22,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 const videoController = new _VideoController.default();
 const videoRoutes = (0, _express.Router)();
 videoRoutes.get('/', videoController.list);
-videoRoutes.get('/summoner/:summonerName', videoController.listBySummoner);
+videoRoutes.get('/summoner/:dataId', videoController.listBySummoner);
 videoRoutes.use(_ensureAuthenticated.default);
 videoRoutes.post('/', _ensureAccountVerify.default, (0, _multer.default)(_multer2.default).single('file'), videoController.upload);
 var _default = videoRoutes;

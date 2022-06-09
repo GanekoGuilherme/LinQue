@@ -15,11 +15,11 @@ class VideoController {
   }
 
   public async listBySummoner(request: Request, response: Response) {
-    const { summonerName } = request.params;
+    const { dataId } = request.params;
     const { page } = request.query;
 
     const listVideoBySummonerService = new ListVideoBySummonerService();
-    const result = await listVideoBySummonerService.execute({ summonerName, pageRaw: Number(page) });
+    const result = await listVideoBySummonerService.execute({ dataId, pageRaw: Number(page) });
 
     return response.json({ items: result });
   }

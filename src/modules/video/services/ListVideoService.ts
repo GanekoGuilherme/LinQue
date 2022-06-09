@@ -13,7 +13,8 @@ export default class ListVideoService {
     }
 
     const videos = await Videos.find()
-      .select('_id name url')
+      .select('_id name url dataId createdAt')
+      .populate({ model: 'Lolinfos', path: 'dataId', select: 'profileIconId name' })
       .sort({ createdAt: -1 })
       .skip(page * 10)
       .limit(10);

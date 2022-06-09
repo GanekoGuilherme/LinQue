@@ -29,14 +29,14 @@ class VideoController {
 
   async listBySummoner(request, response) {
     const {
-      summonerName
+      dataId
     } = request.params;
     const {
       page
     } = request.query;
     const listVideoBySummonerService = new _ListVideoBySummonerService.default();
     const result = await listVideoBySummonerService.execute({
-      summonerName,
+      dataId,
       pageRaw: Number(page)
     });
     return response.json({

@@ -31,7 +31,8 @@ const videos = new _mongoose.Schema({
   },
   dataId: {
     type: String,
-    required: true
+    required: true,
+    ref: 'Lolinfos'
   }
 }, {
   timestamps: true,

@@ -23,6 +23,7 @@ const videos = new Schema(
     dataId: {
       type: String,
       required: true,
+      ref: 'Lolinfos',
     },
   },
   {

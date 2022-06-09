@@ -95,7 +95,8 @@ class ShowExtensiveSummonerService {
     }
 
     const videos = await Videos.find({ dataId: summoner._id })
-      .select('_id name url createdAt')
+      .select('_id name url dataId createdAt')
+      .populate({ model: 'Lolinfos', path: 'dataId', select: 'profileIconId name' })
       .sort({ createdAt: -1 })
       .limit(10);
 

@@ -10,7 +10,7 @@ const videoController = new VideoController();
 const videoRoutes = Router();
 
 videoRoutes.get('/', videoController.list);
-videoRoutes.get('/summoner/:summonerName', videoController.listBySummoner);
+videoRoutes.get('/summoner/:dataId', videoController.listBySummoner);
 videoRoutes.use(ensureAuthenticated);
 videoRoutes.post('/', ensureAccountVerify, multer(multerConfig).single('file'), videoController.upload);
 
