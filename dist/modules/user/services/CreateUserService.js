@@ -31,9 +31,12 @@ class CreateUserService {
       email
     });
     if (checkEmail) throw new _AppError.default('E-mail indisponível.', 400);
-    const pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*?[0-9])[@!#$%^&*+\-.,;_:'~()/\\a-zA-Z\d]{8,16}$/;
+    const minLength = password.length >= 8;
+    const containsLetter = /[a-zA-Z]/.test(password);
+    const containsNumber = /[0-9]/.test(password);
+    const containsSpecial = /\W|_/.test(password);
 
-    if (!pattern.test(password)) {
+    if (!(minLength && containsLetter && containsNumber && containsSpecial)) {
       throw new _AppError.default('Senha Inválida.', 400);
     }
 
